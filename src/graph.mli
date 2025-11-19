@@ -1,4 +1,3 @@
-
 (* Type of a directed graph in which arcs have labels of type 'a. 
  * This type is deliberately abstract. *)
 type 'a graph
