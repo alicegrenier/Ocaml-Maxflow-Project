@@ -111,4 +111,26 @@ let from_file path =
   
   close_in infile ;
   final_graph
+
+  let export path graph =
+    (* Open a write-file. *)
+  let ff = open_out path in
+
+  (* Write in this file. *)
+  fprintf ff "
+  digraph dot_graph {\n
+    fontname=\"Helvetica,Arial,sans-serif\"\n
+    node [fontname=\"Helvetica,Arial,sans-serif\"]\n
+    edge [fontname=\"Helvetica,Arial,sans-serif\"]\n
+    rankdir=LR;\n
+    node [shape = circle];\n
+  " ;
+
+  (* Write all arcs with their source, target and label *)
+  e_iter graph (fun arc -> fprintf ff "%d -> %d [label = \"%s\"];\n" arc.src arc.tgt arc.lbl) ;
+
+  fprintf ff "}" ;
+  
+  close_out ff ;
+  ()
   
