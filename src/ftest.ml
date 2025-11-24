@@ -1,5 +1,6 @@
 open Gfile
 open Tools
+open Graph
     
 let () =
 
@@ -26,6 +27,16 @@ let () =
   and _sink = int_of_string Sys.argv.(3)
   in
 
+
+  (*(*------------------------------INITIAL TEST--------------------------------------------*)
+  let graph = from_file infile in 
+
+  (* Rewrite the graph that has been read. *)
+  let () = write_file outfile graph in
+
+  ()*)
+
+  (*(* ------------------------------ TEST CLONE_NODES --------------------------------- *)
   (* Open file *)
   let graph = from_file infile in 
   let clone_graph = clone_nodes graph in
@@ -33,6 +44,20 @@ let () =
 
   (* Rewrite the graph that has been read. *)
   let () = write_file outfile clone_graph in
+
+  ()*)
+
+  (* ----------------------------- TEST GMAP AND ADD_ARC ------------------------------ *)
+
+  (* Open file *)
+  let graph = from_file infile in 
+  let g : int graph = gmap graph (fun x -> int_of_string x) in
+  let add_graph = (add_arc g 0 3 3) in
+
+
+  (* Rewrite the graph that has been read. *)
+  let path_graph = gmap add_graph (fun x -> string_of_int x) in
+  let () = write_file outfile path_graph in
 
   ()
 
