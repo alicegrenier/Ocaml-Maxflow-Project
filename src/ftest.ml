@@ -75,11 +75,12 @@ let () =
 (* Open file *)
   let graph = from_file infile in 
   let g : int graph = gmap graph (fun x -> int_of_string x) in
-  let add_graph = (add_arc g 0 3 3) in
+  let cap_graph = create_capacity_graph g in
+  let res_graph = create_residual_graph cap_graph in
 
 
   (* Rewrite the graph that has been read. *)
-  let path_graph = gmap add_graph (fun x -> string_of_int x) in
+  let path_graph = gmap res_graph (fun x -> string_of_int x) in
   let () = write_file outfile path_graph in
 
   ()

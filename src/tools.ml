@@ -36,7 +36,20 @@ let add_arc gr id1 id2 n =
   (* creates a residual graph from the capacity graph*)
   let create_residual_graph gr = 
     let node_graph = clone_nodes gr in 
-    let f1 = (fun gr1 arc -> new_arc gr1 {src = arc.src ; tgt = arc.tgt ; lbl = arc.lbl.max_flow }) in
-    let f2 = (fun gr2 arc -> new_arc gr2 {src = arc.tgt ; tgt = arc.src ; lbl = arc.lbl.current_flow }) in
-    let f3 gr3 arc = f2 (f1 gr3 arc) arc in
-    e_fold gr f3 node_graph
+    let add_forward = (fun gr1 arc -> new_arc gr1 {src = arc.src ; tgt = arc.tgt ; lbl = arc.lbl.max_flow }) in
+    let add_backward = (fun gr2 arc -> new_arc gr2 {src = arc.tgt ; tgt = arc.src ; lbl = arc.lbl.current_flow }) in
+    let add_both gr3 arc = add_backward (add_forward gr3 arc) arc in
+    e_fold gr add_both node_graph
+
+
+(*
+  connected(x, y).
+  connected(z, d).
+
+  has_path(Orig, Dest) :- connect(Orig, Dest)
+  has_path(Orig, Dest) :- connect(Orig, Inter), has_path(Inter, Dest).
+
+
+  type graph_path = id list
+  val find_path : int graph -> id -> id -> graph_path option
+  *)
