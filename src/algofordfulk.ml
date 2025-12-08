@@ -11,7 +11,7 @@ let rec inject_flow_residual residual_graph graph_path flow =
   match graph_path with
   | [] -> residual_graph
   | id_node1 :: id_node2 :: [] -> add_return_arc (add_arc residual_graph id_node1 id_node2 flow) id_node1 id_node2 flow
-  | id_node3 :: id_node4 :: rest -> inject_flow_residual (add_return_arc (add_arc residual_graph id_node3 id_node4 flow) id_node3 id_node4 flow) rest flow
+  | id_node3 :: id_node4 :: rest -> inject_flow_residual (add_return_arc (add_arc residual_graph id_node3 id_node4 flow) id_node3 id_node4 flow) (id_node4 :: rest) flow
   | _ :: [] -> residual_graph
 
 
@@ -23,13 +23,40 @@ let rec inject_flow_capacity capacity_graph graph_path flow =
   match graph_path with
   | [] -> capacity_graph
   | id_node1 :: id_node2 :: [] -> add_capacity capacity_graph id_node1 id_node2 flow
-  | id_node3 :: id_node4 :: rest -> inject_flow_capacity (add_capacity capacity_graph id_node3 id_node4 flow) rest flow
+  | id_node3 :: id_node4 :: rest -> inject_flow_capacity (add_capacity capacity_graph id_node3 id_node4 flow) (id_node4 :: rest) flow
   | _ :: [] -> capacity_graph
 
 (***********************************FIND PATH************************************)
 
-let find_path residual_graph src dst =
+let find_path _residual_graph _src _dst = None
   (*TO DO*)
+
+(***********************************FIND FLOW************************************)
+(* Find minimum flow for a given path *)
+
+  let find_flow graph_path residual_graph =
+    
+    let rec loop graph_path acu =
+
+      match graph_path with
+      | [] -> acu
+      | id_node1 :: id_node2 :: [] -> 
+        begin
+          match (find_arc residual_graph id_node1 id_node2) with
+          | None -> acu
+          | Some arc -> if arc.lbl > acu then arc.lbl else acu
+        end
+
+      | id_node3 :: id_node4 :: rest -> 
+        begin
+          match (find_arc residual_graph id_node3 id_node4) with
+          | None -> acu
+          | Some arc -> if arc.lbl > acu then loop (id_node4 :: rest) arc.lbl else loop (id_node4 :: rest) acu
+        end
+
+      | _ :: [] -> acu
+    
+      in loop graph_path 1000
 
 (********************************COMPUTE MAX FLOW********************************)
 
