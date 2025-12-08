@@ -26,6 +26,14 @@ let add_arc gr id1 id2 n =
   | Some x -> new_arc gr {x with lbl = (x.lbl + n)}
   | None -> new_arc gr {src = id1 ; tgt = id2 ; lbl = n} 
 
+  (* adds n to the capacity of the arc between id1 and id2*)
+let add_capacity gr id1 id2 n =
+  let arc_exists = find_arc gr id1 id2 in
+  match arc_exists with
+  | None -> gr
+  | Some x -> new_arc gr { src = x.src ; tgt = x.tgt ; lbl = {current_flow = (x.lbl.current_flow + n) ; max_flow = x.lbl.max_flow} }
+  
+
   (* adds a return arc to the specified arc (src -> dst) with the specified value as label*)
   let add_return_arc gr src dst lbl = add_arc gr dst src lbl
 

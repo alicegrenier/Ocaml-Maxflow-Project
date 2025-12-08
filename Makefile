@@ -2,7 +2,7 @@
 
 src?=0
 dst?=5
-graph?=graph3.txt
+graph?=graph9.txt
 
 all: build
 

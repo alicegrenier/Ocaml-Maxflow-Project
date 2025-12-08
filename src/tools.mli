@@ -15,6 +15,8 @@ val add_arc: int graph -> id -> id -> int -> int graph
 
 val add_return_arc: int graph -> id -> id -> int -> int graph
 
+val add_capacity: capacity graph -> id -> id -> int -> capacity graph
+
 val create_capacity_graph: int graph -> capacity graph
 
 val create_residual_graph: capacity graph -> int graph

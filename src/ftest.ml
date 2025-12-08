@@ -83,4 +83,6 @@ let () =
   let path_graph = gmap res_graph (fun x -> string_of_int x) in
   let () = write_file outfile path_graph in
 
+  let () = export outfile path_graph in
+
   ()
