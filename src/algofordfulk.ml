@@ -21,15 +21,66 @@ let rec inject_flow_residual residual_graph graph_path flow =
 let rec inject_flow_capacity capacity_graph graph_path flow =
 
   match graph_path with
-  | [] -> capacity_graph
-  | id_node1 :: id_node2 :: [] -> add_capacity capacity_graph id_node1 id_node2 flow
+  | []| [_]   -> capacity_graph
+  (*| id_node1 :: id_node2 :: [] -> add_capacity capacity_graph id_node1 id_node2 flow
   | id_node3 :: id_node4 :: rest -> inject_flow_capacity (add_capacity capacity_graph id_node3 id_node4 flow) (id_node4 :: rest) flow
-  | _ :: [] -> capacity_graph
+  | _ :: [] -> capacity_graph*)
+  | id_node1 :: id_node2 :: rest -> let new_graph = add_capacity capacity_graph id_node1 id_node2 flow in
+  inject_flow_capacity new_graph (id_node2 :: rest) flow
+
+(**********************************GET MIN FLOW**********************************)  
+
+(* finds the minimum flow of a path on a residual graph *)
+
+let rec get_min_flow residual_graph path =
+  match path with
+  | [] | [_] -> 10000
+  | id_node1 :: id_node2 :: rest ->
+      match find_arc residual_graph id_node1 id_node2 with
+      | None -> 0
+      | Some arc -> min arc.lbl (get_min_flow residual_graph (id_node2 :: rest))
 
 (***********************************FIND PATH************************************)
 
-let find_path _residual_graph _src _dst = None
-  (*TO DO*)
+(* finds a path from the given source to the given destination in the given graph *)
+
+let find_path residual_graph src dst = 
+
+  (* recursive loop for a depth first search within the graph *)
+  let rec dfs already_visited current_node =
+
+    (* if the current node is the destination, then the search is over*)
+    (* adds the current node to a list that is then returned as the path found *)
+    if current_node = dst then Some [current_node]
+    (* if the current node is an element of the list of already visited nodes, 
+      then the search is over, there is no path *)
+    else if List.mem current_node already_visited then None
+    
+    else 
+      (* retrieves all the outgoing arcs of the current node *)
+      let outgoing_arcs = out_arcs residual_graph current_node in
+
+      (* recursive loop on the list of outgoing arcs *)
+      let rec loop = function
+       | [] -> None (* empty list of arcs, meaning no path found from this node *)
+       | arc :: rest -> 
+        (* checks that the arc has a remaining capacity, otherwise no point it cannot be used*)
+        (* also checks that the target node of this arc has not already been visited *)
+        if arc.lbl > 0 && not (List.mem arc.tgt already_visited) then
+        
+        (* if all requirements are met, recursive reseach on the next node, 
+        by adding the current node to the list of nodes already visited *)
+        match dfs (current_node :: already_visited) arc.tgt with
+        (* destination found, the path is rebuilt by adding the current node to the list of nodes already visited *)
+         | Some path -> Some (current_node :: path)
+        (* this arc does not lead to the destination, then goes on to the next arc *)
+         | None -> loop rest
+    
+        else loop rest  
+  in
+  loop outgoing_arcs
+in
+dfs [] src 
 
 (***********************************FIND FLOW************************************)
 (* Find minimum flow for a given path *)
@@ -62,33 +113,29 @@ let find_path _residual_graph _src _dst = None
 
 let compute_max_flow gr src dest = 
 
-  (*à partir du graphe de base, créer un graphe de flot 0*)
-  let capacity_graph = create_capacity_graph gr in
+  (* from given graph, creates the initial capacity graph, with a flow equal to zero on every arc *)
+  let initial_capacity_graph = create_capacity_graph gr in
 
-  (*à partir du graphe de base, créer un graphe d'écart vide*)
-  let residual_graph = create_residual_graph capacity_graph in
+  (* recursive loop that iterates as long as in improving path exists *)
+  let rec loop capacity_graph total_flow = 
 
-  (* créer un chemin initial vide, auquel on va progressivement ajouter des sommets *)
-  let resulting_path = [] in
+    (* from given graph and current capacity graph, creates the corresponding residual graph *)
+    let residual_graph = create_residual_graph capacity_graph in
 
-  (*en partant du node source, parcourir pour voir s'il existe un chemin --> fonction dédiée à rechercher un chemin*)
-  (*Il faut que cette fonction cherche s'il existe des arcs et s'il reste du flot sur ces arcs*)
-  (*Il faut ce soit le meilleur chemin en terme de flot (flot le plus élevé possible) *)
+  (* at each iteration, checks wether flow can still be injected, ie : if there is an improving path on the graph *)
+  match find_path residual_graph src dest with
 
-  let rec loop ... capacity_graph residual_graph resulting_path = (* tant qu'il existe un chemin --> on démarre avec resulting_path, mais avec quel chemin on itère ??*)
+    (* find_path cannot compute an improving path, maximum flow has been reached *)
+    | None -> total_flow 
 
-  (* à chaque itération, on regarde si on peut encore injecter du flot (ie : il existe un chemin améliorant) *)
-  match (find_path capacity_graph src dest) with
-
-    (*1) s'il n'y a pas/plus de chemin (None), on renvoie le chemin de l'itération précédente *)
-    | None -> resulting_path (* le chemin, peut être vide *)
-
-    (*2) s'il existe un chemin, on applique l'algo à ce chemin --> fonction dédiée à appliquer l'algo sur un chemin donné*)
-    | Some (path, flow) -> let capacity_graph, residual_graph = inject_flow residual_graph path flow
+    (* find_path computes an improving path *)
+    | Some path -> 
+      (* goes through the path to find the minimum flow value *)
+      let flow = get_min_flow residual_graph path in
+      (* updates the capacity graph by injecting the flow value found *)
+      let new_capacity_graph = inject_flow_capacity capacity_graph path flow in 
+      (* call to the next loop with the updated capacity graph and flow *)
+      loop new_capacity_graph (total_flow + flow)
 
 in
-
-  loop ... capacity_graph residual_graph resulting_path
-
-
-(* répéter autant de fois que nécessaire jusqu'à obtenir un flot max *)
+  loop initial_capacity_graph 0

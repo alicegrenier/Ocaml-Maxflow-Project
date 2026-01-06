@@ -44,7 +44,9 @@ let add_capacity gr id1 id2 n =
   (* creates a residual graph from the capacity graph*)
   let create_residual_graph gr = 
     let node_graph = clone_nodes gr in 
+    (* Forward arc *)
     let add_forward = (fun gr1 arc -> new_arc gr1 {src = arc.src ; tgt = arc.tgt ; lbl = arc.lbl.max_flow }) in
+    (* Backward arc *)
     let add_backward = (fun gr2 arc -> new_arc gr2 {src = arc.tgt ; tgt = arc.src ; lbl = arc.lbl.current_flow }) in
     let add_both gr3 arc = add_backward (add_forward gr3 arc) arc in
     e_fold gr add_both node_graph
