@@ -52,6 +52,17 @@ let write_file path graph =
   close_out ff ;
   ()
 
+let write_flow_in_file flow file =
+
+  (* Open a write-file. *)
+  let ff = open_out file in
+
+  (* Write in this file. *)
+  fprintf ff "%% Result of ford-dulkerson algorithm on the graph : %d.\n\n" flow;
+  
+  close_out ff ;
+  ()
+
 (* Reads a line with a node. *)
 let read_node graph line =
   try Scanf.sscanf line "n %f %f %d" (fun _ _ id -> new_node graph id)

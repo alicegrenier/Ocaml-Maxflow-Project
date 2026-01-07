@@ -13,4 +13,4 @@ val find_path: int graph -> id -> id -> graph_path option
 
 val find_flow: graph_path -> int graph -> int
 
-val compute_max_flow: 'a graph -> id -> id -> int 
+val compute_max_flow: int graph -> id -> id -> int 

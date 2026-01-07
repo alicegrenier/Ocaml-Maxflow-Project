@@ -1,6 +1,7 @@
 open Gfile
 open Tools
 open Graph
+open Algofordfulk
     
 let () =
 
@@ -23,8 +24,8 @@ let () =
   and outfile = Sys.argv.(4)
   
   (* These command-line arguments are not used for the moment. *)
-  and _source = int_of_string Sys.argv.(2)
-  and _sink = int_of_string Sys.argv.(3)
+  and source = int_of_string Sys.argv.(2)
+  and sink = int_of_string Sys.argv.(3)
   in
 
 
@@ -73,7 +74,7 @@ let () =
   (* ----------------------------------TEST RESIDUAL GRAPH -----------------------------------*)
 
 (* Open file *)
-  let graph = from_file infile in 
+  (*let graph = from_file infile in 
   let g : int graph = gmap graph (fun x -> int_of_string x) in
   let cap_graph = create_capacity_graph g in
   let res_graph = create_residual_graph cap_graph in
@@ -84,5 +85,16 @@ let () =
   let () = write_file outfile path_graph in
 
   let () = export outfile path_graph in
+
+  ()*)
+
+  (* ----------------------------------TEST ALL -----------------------------------*)
+  (* Open file *)
+  let graph = from_file infile in 
+  let g : int graph = gmap graph (fun x -> int_of_string x) in
+  let max_flow = compute_max_flow g source sink in
+
+  (* Write the result that has been computed. *)
+  let () = write_flow_in_file max_flow outfile in
 
   ()
