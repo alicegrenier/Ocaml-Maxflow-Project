@@ -88,13 +88,70 @@ let () =
 
   ()*)
 
-  (* ----------------------------------TEST ALL -----------------------------------*)
+  (* ----------------------------------TEST INJECT FLOW RESIDUAL-----------------------------------*)
+
+  (* Open file *)
+  (*let graph = from_file infile in 
+  let g : int graph = gmap graph (fun x -> int_of_string x) in
+  let cap_graph = create_capacity_graph g in
+  let res_graph = create_residual_graph cap_graph in
+  let test_graph = inject_flow_residual res_graph [0 ; 1 ; 4 ; 10 ; 12] 2 in
+
+  (* Rewrite the graph that has been read. *)
+  let path_graph = gmap test_graph (fun x -> string_of_int x) in
+  let () = write_file outfile path_graph in
+
+  let () = export outfile path_graph in
+
+  ()*)
+
+  (* ----------------------------------TEST INJECT FLOW CAPACITY-----------------------------------*)
+
+  (* Open file *)
+  (*let graph = from_file infile in 
+  let g : int graph = gmap graph (fun x -> int_of_string x) in
+  let cap_graph = create_capacity_graph g in
+  let test_graph = inject_flow_capacity cap_graph [0 ; 1 ; 4 ; 10 ; 12] 2 in
+  let res_graph = create_residual_graph test_graph in
+  (*let res_graph = create_residual_graph cap_graph in*)
+
+  (* Rewrite the graph that has been read. *)
+  let path_graph = gmap res_graph (fun x -> string_of_int x) in
+  let () = write_file outfile path_graph in
+
+  let () = export outfile path_graph in
+
+  ()*)
+
+  (* ----------------------------------TEST MIN FLOW -----------------------------------*)
+  (* Open file *)
+  (*let graph = from_file infile in 
+  let g : int graph = gmap graph (fun x -> int_of_string x) in
+  let min_flow = get_min_flow g [0 ; 1 ; 5 ; 10] in
+
+  (* Write the result that has been computed. *)
+  let () = write_flow_in_file min_flow outfile in
+
+  ()*)
+
+  (* ----------------------------------TEST FIND PATH -----------------------------------*)
   (* Open file *)
   let graph = from_file infile in 
+  let g : int graph = gmap graph (fun x -> int_of_string x) in
+  let path = find_path g source sink in
+
+  (* Write the result that has been computed. *)
+  let () = write_path_in_file path outfile in
+
+  ()
+
+  (* ----------------------------------TEST ALL -----------------------------------*)
+  (* Open file *)
+  (*let graph = from_file infile in 
   let g : int graph = gmap graph (fun x -> int_of_string x) in
   let max_flow = compute_max_flow g source sink in
 
   (* Write the result that has been computed. *)
   let () = write_flow_in_file max_flow outfile in
 
-  ()
+  ()*)

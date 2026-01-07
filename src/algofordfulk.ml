@@ -10,8 +10,8 @@ let rec inject_flow_residual residual_graph graph_path flow =
 
   match graph_path with
   | [] -> residual_graph
-  | id_node1 :: id_node2 :: [] -> add_return_arc (add_arc residual_graph id_node1 id_node2 flow) id_node1 id_node2 flow
-  | id_node3 :: id_node4 :: rest -> inject_flow_residual (add_return_arc (add_arc residual_graph id_node3 id_node4 flow) id_node3 id_node4 flow) (id_node4 :: rest) flow
+  | id_node1 :: id_node2 :: [] -> add_return_arc (add_arc residual_graph id_node1 id_node2 (-flow)) id_node1 id_node2 flow
+  | id_node3 :: id_node4 :: rest -> inject_flow_residual (add_return_arc (add_arc residual_graph id_node3 id_node4 (-flow)) id_node3 id_node4 flow) (id_node4 :: rest) flow
   | _ :: [] -> residual_graph
 
 

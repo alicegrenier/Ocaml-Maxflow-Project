@@ -63,6 +63,19 @@ let write_flow_in_file flow file =
   close_out ff ;
   ()
 
+let write_path_in_file path file =
+
+  (* Open a write-file. *)
+  let ff = open_out file in
+
+  (* Write in this file. *)
+  match path with
+  | None -> fprintf ff "%% No path found";
+  | Some id_list -> List.iter (fun x -> fprintf ff "%% Path found : %d.\n\n" x) id_list;
+  
+  close_out ff ;
+  ()
+
 (* Reads a line with a node. *)
 let read_node graph line =
   try Scanf.sscanf line "n %f %f %d" (fun _ _ id -> new_node graph id)
