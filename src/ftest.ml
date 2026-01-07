@@ -136,22 +136,22 @@ let () =
 
   (* ----------------------------------TEST FIND PATH -----------------------------------*)
   (* Open file *)
-  let graph = from_file infile in 
+  (*let graph = from_file infile in 
   let g : int graph = gmap graph (fun x -> int_of_string x) in
   let path = find_path g source sink in
 
   (* Write the result that has been computed. *)
   let () = write_path_in_file path outfile in
 
-  ()
+  ()*)
 
-  (* ----------------------------------TEST ALL -----------------------------------*)
+  (* ----------------------------------TEST COMPUTE MAX FLOW -----------------------------------*)
   (* Open file *)
-  (*let graph = from_file infile in 
+  let graph = from_file infile in 
   let g : int graph = gmap graph (fun x -> int_of_string x) in
   let max_flow = compute_max_flow g source sink in
 
   (* Write the result that has been computed. *)
   let () = write_flow_in_file max_flow outfile in
 
-  ()*)
+  ()

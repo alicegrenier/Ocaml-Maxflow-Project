@@ -22,9 +22,6 @@ let rec inject_flow_capacity capacity_graph graph_path flow =
 
   match graph_path with
   | []| [_]   -> capacity_graph
-  (*| id_node1 :: id_node2 :: [] -> add_capacity capacity_graph id_node1 id_node2 flow
-  | id_node3 :: id_node4 :: rest -> inject_flow_capacity (add_capacity capacity_graph id_node3 id_node4 flow) (id_node4 :: rest) flow
-  | _ :: [] -> capacity_graph*)
   | id_node1 :: id_node2 :: rest -> let new_graph = add_capacity capacity_graph id_node1 id_node2 flow in
   inject_flow_capacity new_graph (id_node2 :: rest) flow
 

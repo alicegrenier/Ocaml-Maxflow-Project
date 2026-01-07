@@ -58,7 +58,7 @@ let write_flow_in_file flow file =
   let ff = open_out file in
 
   (* Write in this file. *)
-  fprintf ff "%% Result of ford-dulkerson algorithm on the graph : %d.\n\n" flow;
+  fprintf ff "%% Result of ford-fulkerson algorithm on the graph (max flow) : %d.\n\n" flow;
   
   close_out ff ;
   ()
