@@ -1,5 +1,6 @@
 open Graph
 open Tools
+open Fordfulktools
 
 type graph_path = id list
 
@@ -31,7 +32,7 @@ let rec inject_flow_capacity capacity_graph graph_path flow =
 
 let rec get_min_flow residual_graph path =
   match path with
-  | [] | [_] -> 10000
+  | [] | [_] -> max_int
   | id_node1 :: id_node2 :: rest ->
       match find_arc residual_graph id_node1 id_node2 with
       | None -> 0
@@ -79,36 +80,35 @@ let find_path residual_graph src dst =
 in
 dfs [] src 
 
-(***********************************FIND FLOW************************************)
-(* Find minimum flow for a given path *)
-
-  let find_flow graph_path residual_graph =
-    
-    let rec loop graph_path acu =
-
-      match graph_path with
-      | [] -> acu
-      | id_node1 :: id_node2 :: [] -> 
-        begin
-          match (find_arc residual_graph id_node1 id_node2) with
-          | None -> acu
-          | Some arc -> if arc.lbl > acu then arc.lbl else acu
-        end
-
-      | id_node3 :: id_node4 :: rest -> 
-        begin
-          match (find_arc residual_graph id_node3 id_node4) with
-          | None -> acu
-          | Some arc -> if arc.lbl > acu then loop (id_node4 :: rest) arc.lbl else loop (id_node4 :: rest) acu
-        end
-
-      | _ :: [] -> acu
-    
-      in loop graph_path 1000
-
 (********************************COMPUTE MAX FLOW********************************)
 
+
+
 let compute_max_flow gr src dest = 
+  
+  (*Initialisation unique des deux graphes *)
+  let initial_capacity_graph = create_capacity_graph gr in
+  let initial_residual_graph = create_residual_graph initial_capacity_graph in 
+
+  (*La boucle prend le graphe résiduel en argument (accumulateur) *)
+  let rec loop capacity_graph residual_graph total_flow = 
+
+    match find_path residual_graph src dest with
+    | None -> total_flow 
+    | Some path -> 
+        let flow = get_min_flow residual_graph path in
+        
+        (* Mise à jour incrémentale des deux graphes *)
+        let new_capacity_graph = inject_flow_capacity capacity_graph path flow in
+        
+        (* On utilise la fonction inject_flow_residual*)
+        let new_residual_graph = inject_flow_residual residual_graph path flow in
+        
+        loop new_capacity_graph new_residual_graph (total_flow + flow)
+  in
+  loop initial_capacity_graph initial_residual_graph 0
+
+(*let compute_max_flow gr src dest = 
 
   (* from given graph, creates the initial capacity graph, with a flow equal to zero on every arc *)
   let initial_capacity_graph = create_capacity_graph gr in
@@ -135,4 +135,4 @@ let compute_max_flow gr src dest =
       loop new_capacity_graph (total_flow + flow)
 
 in
-  loop initial_capacity_graph 0
+  loop initial_capacity_graph 0 *)
