@@ -1,13 +1,14 @@
 open Graph
 
-(*capacity est un type abstrait : ne peux être manipulé directement que dans le module fordfulktools
- avec les fonctions add_capacity, create_capacity_graph et create_residual_graph
- Si on voulait pouvoir afficher le graphe de capacité dans ftest, il faudrait ajouter une fonction capacity_to_string
- car on ne peut plus lire les champs du type capacity en dehors du module*)
+(* capacity is an abstract type : can only be manipulated in module fordfulktools 
+with functions add_capacity, create_capacity_graph and create_residual_graph of the module *)
 type capacity
 
+(* adds n to the current flow of the arc between id1 and id2 on the capacity graph *)
 val add_capacity: capacity graph -> id -> id -> int -> capacity graph
 
+(* creates a capacity graph with label = current_flow/max_flow from the original graph *)
 val create_capacity_graph: int graph -> capacity graph
 
+(* creates a residual graph from the capacity graph *)
 val create_residual_graph: capacity graph -> int graph
