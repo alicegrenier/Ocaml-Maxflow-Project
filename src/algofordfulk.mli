@@ -16,5 +16,5 @@ val get_min_flow: int graph -> int list -> int
 (* finds a path from the given source to the given destination in the given graph *)
 val find_path: int graph -> id -> id -> graph_path option
 
-(* *)
+(* computes Ford-Fulkserson algorithm on a given graph and returns maximum flow found *)
 val compute_max_flow: int graph -> id -> id -> int 
