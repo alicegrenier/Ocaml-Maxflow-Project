@@ -1,6 +1,6 @@
 This project is an implementation of the Ford-Fulkerson algorithm to find maximum flow on a graph.
 
-## Structure du projet
+## Project structure
 
 Our code is organized as follows :
 
@@ -28,3 +28,4 @@ For testing purposes, use ftest by running 'make demo' with four arguments that 
 - outfile : File in which results are written.
 
 Authors : Alice Grenier grenie@insa-toulouse.fr - Claire Alix cali@insa-toulouse.fr
+
