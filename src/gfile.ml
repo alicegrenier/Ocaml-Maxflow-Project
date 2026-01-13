@@ -52,6 +52,7 @@ let write_file path graph =
   close_out ff ;
   ()
 
+  (* Write the result of Ford-Fulkerson computation on a given graph in a file *)
 let write_flow_in_file flow file =
 
   (* Open a write-file. *)
@@ -63,6 +64,7 @@ let write_flow_in_file flow file =
   close_out ff ;
   ()
 
+  (* Write a path (id list) in a file *)
 let write_path_in_file path file =
 
   (* Open a write-file. *)
