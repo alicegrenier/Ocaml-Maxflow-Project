@@ -32,6 +32,7 @@ let compute_y id =
   300 + sgn * (delta / 2) * 100
   
 
+  
 let write_file path graph =
 
   (* Open a write-file. *)
@@ -52,7 +53,9 @@ let write_file path graph =
   close_out ff ;
   ()
 
-  (* Write the result of Ford-Fulkerson computation on a given graph in a file *)
+
+
+(* Write the result of Ford-Fulkerson computation on a given graph in a file *)
 let write_flow_in_file flow file =
 
   (* Open a write-file. *)
@@ -64,7 +67,9 @@ let write_flow_in_file flow file =
   close_out ff ;
   ()
 
-  (* Write a path (id list) in a file *)
+
+
+(* Write a path (id list) in a file *)
 let write_path_in_file path file =
 
   (* Open a write-file. *)
@@ -78,6 +83,8 @@ let write_path_in_file path file =
   close_out ff ;
   ()
 
+
+
 (* Reads a line with a node. *)
 let read_node graph line =
   try Scanf.sscanf line "n %f %f %d" (fun _ _ id -> new_node graph id)
@@ -85,9 +92,13 @@ let read_node graph line =
     Printf.printf "Cannot read node in line - %s:\n%s\n%!" (Printexc.to_string e) line ;
     failwith "from_file"
 
+
+
 (* Ensure that the given node exists in the graph. If not, create it. 
  * (Necessary because the website we use to create online graphs does not generate correct files when some nodes have been deleted.) *)
 let ensure graph id = if node_exists graph id then graph else new_node graph id
+
+
 
 (* Reads a line with an arc. *)
 let read_arc graph line =
@@ -97,12 +108,16 @@ let read_arc graph line =
     Printf.printf "Cannot read arc in line - %s:\n%s\n%!" (Printexc.to_string e) line ;
     failwith "from_file"
 
+
+
 (* Reads a comment or fail. *)
 let read_comment graph line =
   try Scanf.sscanf line " %%" graph
   with _ ->
     Printf.printf "Unknown line:\n%s\n%!" line ;
     failwith "from_file"
+
+
 
 let from_file path =
 
@@ -138,18 +153,20 @@ let from_file path =
   close_in infile ;
   final_graph
 
-  let export path graph =
-    (* Open a write-file. *)
+
+
+let export path graph =
+  (* Open a write-file. *)
   let ff = open_out path in
 
   (* Write in this file. *)
   fprintf ff "
   digraph dot_graph {\n
-    fontname=\"Helvetica,Arial,sans-serif\"\n
-    node [fontname=\"Helvetica,Arial,sans-serif\"]\n
-    edge [fontname=\"Helvetica,Arial,sans-serif\"]\n
-    rankdir=LR;\n
-    node [shape = circle];\n
+  fontname=\"Helvetica,Arial,sans-serif\"\n
+  node [fontname=\"Helvetica,Arial,sans-serif\"]\n
+  edge [fontname=\"Helvetica,Arial,sans-serif\"]\n
+  rankdir=LR;\n
+  node [shape = circle];\n
   " ;
 
   (* Write all arcs with their source, target and label *)

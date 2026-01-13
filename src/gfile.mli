@@ -12,8 +12,10 @@ val from_file: path -> string graph
  * If necessary, use gmap (to be written by you) to prepare the input graph. *)
 val write_file: path -> string graph -> unit
 
+(* Write the result of Ford-Fulkerson computation on a given graph in a file *)
 val write_flow_in_file: int -> path -> unit
 
+(* Write a path (id list) in a file *)
 val write_path_in_file: int list option -> path -> unit
 
 (* writes a string graph in dot format *)
