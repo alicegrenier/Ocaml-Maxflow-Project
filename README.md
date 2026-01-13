@@ -8,7 +8,7 @@ Our code is organized as follows :
 * **`src/fordfulktools.ml`** : Module used to handle capacity type and create graphs (residual and capacity). Defines the abstract capacity type.
 * **`src/tools.ml`** : Tools module used to handle basic operations on any type of graph.
 * **`src/ftest.ml`** : Testing module for the project.
-* **`src/graph.ml` & `src/gfile.ml`** : Initial library to manipulate graphs and files.
+* **`src/graph.ml` & `src/gfile.ml`** : Initial libraries to manipulate graphs and files.
 
 A [`Makefile`](Makefile) provides some useful commands:
 
@@ -28,5 +28,6 @@ For testing purposes, use ftest by running 'make demo' with four arguments that 
 - outfile : File in which results are written.
 
 Authors : Alice Grenier grenie@insa-toulouse.fr - Claire Alix cali@insa-toulouse.fr
+
 
 
