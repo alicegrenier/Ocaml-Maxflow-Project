@@ -1,4 +1,4 @@
-This project is an implementation of the Ford-Fulkerson algorithm to find maximum flow on a graph.
+This project is an implementation of the Ford-Fulkerson algorithm to find the maximum flow on a graph.
 
 ## Project structure
 
@@ -18,7 +18,7 @@ A [`Makefile`](Makefile) provides some useful commands:
  - `make edit` to open the project in VSCode
  - `make clean` to remove build artifacts
 
-## Utilisation
+## Utilization
 
 For testing purposes, use ftest by running 'make demo' with four arguments that can be changed in the Makefile.
 
@@ -28,4 +28,5 @@ For testing purposes, use ftest by running 'make demo' with four arguments that 
 - outfile : File in which results are written.
 
 Authors : Alice Grenier grenie@insa-toulouse.fr - Claire Alix cali@insa-toulouse.fr
+
 
