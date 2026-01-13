@@ -2,13 +2,11 @@ open Graph
 open Tools
 open Fordfulktools
 
-(* A path is a list of identifiers of nodes *)
 type graph_path = id list
 
 (********************************INJECT FLOW RESIDUAL********************************)
 
-(* injects flow on the residual graph's arcs for the given path
-It reduces the forward capacity and increases backward capacity *)
+(* injects flow on the residual graph arcs for the given path*)
 let rec inject_flow_residual residual_graph graph_path flow =
 
   match graph_path with
@@ -20,7 +18,7 @@ let rec inject_flow_residual residual_graph graph_path flow =
 
 (********************************INJECT FLOW CAPACITY********************************)
 
-(* injects flow on the capacity graph's arcs for the given path*)
+(* injects flow on the capacity graph arcs for the given path*)
 let rec inject_flow_capacity capacity_graph graph_path flow =
 
   match graph_path with
@@ -30,7 +28,7 @@ let rec inject_flow_capacity capacity_graph graph_path flow =
 
 (**********************************GET MIN FLOW**********************************)  
 
-(* finds the minimum flow on a given path on a residual graph *)
+(* finds the minimum flow of a path on a residual graph *)
 let rec get_min_flow residual_graph path =
   match path with
   | [] | [_] -> max_int
@@ -44,7 +42,7 @@ let rec get_min_flow residual_graph path =
 (* finds a path from the given source to the given destination in the given graph *)
 let find_path residual_graph src dst = 
 
-  (* recursive loop for a depth first search within the graph *)
+  (* recursive loop for a depth first search (dfs) within the graph *)
   let rec dfs already_visited current_node =
 
     (* if the current node is the destination, then the search is over*)
@@ -62,11 +60,11 @@ let find_path residual_graph src dst =
       let rec loop = function
        | [] -> None (* empty list of arcs, meaning no path found from this node *)
        | arc :: rest -> 
-        (* checks that the arc has a remaining capacity, otherwise no point it cannot be used*)
+        (* checks that the arc has a remaining capacity, otherwise it cannot be used*)
         (* also checks that the target node of this arc has not already been visited *)
         if arc.lbl > 0 && not (List.mem arc.tgt already_visited) then
         
-        (* if all requirements are met, recursive reseach on the next node, 
+        (* if all requirements are met, recursive research on the next node, 
         by adding the current node to the list of nodes already visited *)
         match dfs (current_node :: already_visited) arc.tgt with
         (* destination found, the path is rebuilt by adding the current node to the list of nodes already visited *)
@@ -82,44 +80,20 @@ dfs [] src
 
 (********************************COMPUTE MAX FLOW********************************)
 
-
+(* computes Ford-Fulkserson algorithm on a given graph and returns maximum flow found *)
 let compute_max_flow gr src dest = 
   
-  (*Initialisation unique des deux graphes *)
+  (* from given graph, creates the initial capacity graph, with a flow equal to zero on every arc *)
+  (* creates the corresponding residual graph *)
+  (* unique intialization of both graphs *)
   let initial_capacity_graph = create_capacity_graph gr in
   let initial_residual_graph = create_residual_graph initial_capacity_graph in 
 
-  (*La boucle prend le graphe résiduel en argument (accumulateur) *)
+  (* recursive loop that iterates as long as in improving path exists *)
   let rec loop capacity_graph residual_graph total_flow = 
 
+    (* at each iteration, checks wether flow can still be injected, ie : if there is an improving path on the graph *)
     match find_path residual_graph src dest with
-    | None -> total_flow 
-    | Some path -> 
-        let flow = get_min_flow residual_graph path in
-        
-        (* Mise à jour incrémentale des deux graphes *)
-        let new_capacity_graph = inject_flow_capacity capacity_graph path flow in
-        
-        (* On utilise la fonction inject_flow_residual*)
-        let new_residual_graph = inject_flow_residual residual_graph path flow in
-        
-        loop new_capacity_graph new_residual_graph (total_flow + flow)
-  in
-  loop initial_capacity_graph initial_residual_graph 0
-
-(*let compute_max_flow gr src dest = 
-
-  (* from given graph, creates the initial capacity graph, with a flow equal to zero on every arc *)
-  let initial_capacity_graph = create_capacity_graph gr in
-
-  (* recursive loop that iterates as long as in improving path exists *)
-  let rec loop capacity_graph total_flow = 
-
-    (* from given graph and current capacity graph, creates the corresponding residual graph *)
-    let residual_graph = create_residual_graph capacity_graph in
-
-  (* at each iteration, checks wether flow can still be injected, ie : if there is an improving path on the graph *)
-  match find_path residual_graph src dest with
 
     (* find_path cannot compute an improving path, maximum flow has been reached *)
     | None -> total_flow 
@@ -127,11 +101,13 @@ let compute_max_flow gr src dest =
     (* find_path computes an improving path *)
     | Some path -> 
       (* goes through the path to find the minimum flow value *)
-      let flow = get_min_flow residual_graph path in
-      (* updates the capacity graph by injecting the flow value found *)
-      let new_capacity_graph = inject_flow_capacity capacity_graph path flow in 
-      (* call to the next loop with the updated capacity graph and flow *)
-      loop new_capacity_graph (total_flow + flow)
+        let flow = get_min_flow residual_graph path in
+        (* updates the capacity graph by injecting the flow value found *)
+        let new_capacity_graph = inject_flow_capacity capacity_graph path flow in
+        (* updates the residual graph by injecting the flow value found *)
+        let new_residual_graph = inject_flow_residual residual_graph path flow in
 
-in
-  loop initial_capacity_graph 0 *)
+        (* call to the next loop with the updated capacity graph, residual graph and flow *)
+        loop new_capacity_graph new_residual_graph (total_flow + flow)
+  in
+  loop initial_capacity_graph initial_residual_graph 0
