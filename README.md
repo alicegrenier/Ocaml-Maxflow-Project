@@ -22,12 +22,13 @@ A [`Makefile`](Makefile) provides some useful commands:
 
 For testing purposes, use ftest by running 'make demo' with four arguments that can be changed in the Makefile.
 
-- src : Identifier of the source node for the Ford-Fulkerson algorithm.
-- dst : Identifier of the sink node for the Ford-Fulkerson algorithm.
-- graph : Source text file for the initial graph given to the algorithm to compute the max flow.
-- outfile : File in which results are written.
+* **`src`** : Identifier of the source node for the Ford-Fulkerson algorithm.
+* **`dst`** : Identifier of the sink node for the Ford-Fulkerson algorithm.
+* **`graph`** : Source text file for the initial graph given to the algorithm to compute the max flow.
+* **`outfile`** : File in which results are written.
 
 Authors : Alice Grenier grenie@insa-toulouse.fr - Claire Alix cali@insa-toulouse.fr
+
 
 
 
