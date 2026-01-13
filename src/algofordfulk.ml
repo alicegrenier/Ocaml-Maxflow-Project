@@ -2,11 +2,13 @@ open Graph
 open Tools
 open Fordfulktools
 
+(* A path is a list of identifiers of nodes *)
 type graph_path = id list
 
 (********************************INJECT FLOW RESIDUAL********************************)
 
-(* injects flow on the residual graph arcs for the given path*)
+(* injects flow on the residual graph's arcs for the given path
+It reduces the forward capacity and increases backward capacity *)
 let rec inject_flow_residual residual_graph graph_path flow =
 
   match graph_path with
@@ -18,7 +20,7 @@ let rec inject_flow_residual residual_graph graph_path flow =
 
 (********************************INJECT FLOW CAPACITY********************************)
 
-(* injects flow on the capacity graph arcs for the given path*)
+(* injects flow on the capacity graph's arcs for the given path*)
 let rec inject_flow_capacity capacity_graph graph_path flow =
 
   match graph_path with
@@ -28,8 +30,7 @@ let rec inject_flow_capacity capacity_graph graph_path flow =
 
 (**********************************GET MIN FLOW**********************************)  
 
-(* finds the minimum flow of a path on a residual graph *)
-
+(* finds the minimum flow on a given path on a residual graph *)
 let rec get_min_flow residual_graph path =
   match path with
   | [] | [_] -> max_int
@@ -41,7 +42,6 @@ let rec get_min_flow residual_graph path =
 (***********************************FIND PATH************************************)
 
 (* finds a path from the given source to the given destination in the given graph *)
-
 let find_path residual_graph src dst = 
 
   (* recursive loop for a depth first search within the graph *)
@@ -81,7 +81,6 @@ in
 dfs [] src 
 
 (********************************COMPUTE MAX FLOW********************************)
-
 
 
 let compute_max_flow gr src dest = 
